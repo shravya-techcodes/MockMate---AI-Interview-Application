@@ -1,3 +1,4 @@
+import "./App.css";
 import LandingPage from "./Pages/LandingPage";
 import React from 'react'
 
