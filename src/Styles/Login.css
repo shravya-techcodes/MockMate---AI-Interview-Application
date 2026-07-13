@@ -24,8 +24,8 @@ body {
 }
 
 .login-img{
-    width: 400px;
-    height: 100%;
+  width: 400px;
+  height: 100%;
 }
 
 /* RIGHT PANEL */
@@ -52,14 +52,14 @@ body {
 }
 
 .right-panel h2 { 
-    font-size:24px; 
-    color:#2b2440; 
-    margin-bottom:8px; 
+  font-size:24px; 
+  color:#2b2440; 
+  margin-bottom:8px; 
 }
 .right-panel > p.welcome {
-    color:#34313a; 
-    font-size:14px; 
-    margin-bottom:25px; 
+  color:#34313a; 
+  font-size:14px; 
+  margin-bottom:25px; 
     
 }
 
