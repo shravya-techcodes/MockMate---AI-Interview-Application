@@ -18,7 +18,7 @@ export default function Login() {
             </div>
 
             <h2>Welcome back!</h2>
-            <p className="welcome">Login to continue your interview practice.</p>
+            <p className="welcome">Login to continue your Interview practice.</p>
 
             <form>
             <label>Email Address</label>
@@ -37,7 +37,7 @@ export default function Login() {
 
             </form>
 
-            <p className="signup-text">Don't have an account? <a href="#">Sign Up</a></p>
+            <p className="signup-text">Don't have an Account? <a href="#">Sign Up</a></p>
         </div>
     </div>
 
