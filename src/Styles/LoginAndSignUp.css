@@ -118,3 +118,11 @@ label {
 }
 
 .signup-text a { color:#6c4ff7; font-weight:600; text-decoration:none; }
+
+/*sign-up page*/
+.hint {
+  font-size:12px;
+  color:#9a93ad;
+  margin-top:-12px;
+  margin-bottom:20px;
+}

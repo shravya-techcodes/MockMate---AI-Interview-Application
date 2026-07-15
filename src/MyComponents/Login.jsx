@@ -1,4 +1,4 @@
-import "../Styles/Login.css";
+import "../Styles/LoginAndSignUp.css";
 import loginImage from "../assets/loginImage.jpeg";
 import React from 'react'
 
