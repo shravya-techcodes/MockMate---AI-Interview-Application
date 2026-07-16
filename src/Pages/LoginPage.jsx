@@ -1,4 +1,4 @@
-import Login from "../MyComponents/Login";
+import Login from "../Components/Login";
 import React from 'react'
 
 export default function LoginPage() {

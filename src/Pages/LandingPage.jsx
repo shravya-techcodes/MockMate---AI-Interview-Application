@@ -1,8 +1,8 @@
-import Navbar from "../MyComponents/Navbar";
-import Hero from "../MyComponents/Hero";
-import Features from "../MyComponents/Features";
-import Working from "../MyComponents/Working";
-import Footer from "../MyComponents/Footer";
+import Navbar from "../Components/Navbar";
+import Hero from "../Components/Hero";
+import Features from "../Components/Features";
+import Working from "../Components/Working";
+import Footer from "../Components/Footer";
 
 import React from 'react'
 
