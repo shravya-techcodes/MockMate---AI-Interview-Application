@@ -1,5 +1,6 @@
 import "../Styles/LoginAndSignUp.css";
 import loginImage from "../assets/loginImage.jpeg";
+import { Link } from "react-router-dom";
 import React from 'react'
 
 export default function Login() {
@@ -37,7 +38,7 @@ export default function Login() {
 
             </form>
 
-            <p className="signup-text">Don't have an Account? <a href="#">Sign Up</a></p>
+            <p className="signup-text">Don't have an Account? <Link to="/signup">Sign Up</Link></p>
         </div>
     </div>
 
