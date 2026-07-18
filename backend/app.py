@@ -1,10 +1,15 @@
+from flask_jwt_extended import (JWTManager, create_access_token, jwt_required, get_jwt_identity)
 from flask import Flask, request, jsonify
 from db import get_connection
 from flask_cors import CORS
 import bcrypt
+import os
 
 app = Flask(__name__)
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+jwt = JWTManager(app)
 CORS(app)
+
 @app.route("/signup", methods=['POST'])
 def signup():
     data = request.get_json()
@@ -61,8 +66,11 @@ def login():
         password.encode("utf-8"),
         user["password"].encode("utf-8")
     ):
+        access_token = create_access_token(identity=user["user_id"])
+
         return jsonify({
             "message": "Login Successful",
+            "token" : access_token,
             "user": {
                 "id": user["user_id"],
                 "full_name": user["full_name"],
