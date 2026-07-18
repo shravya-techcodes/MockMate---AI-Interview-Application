@@ -1,0 +1,57 @@
+.about {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 70px 60px;
+  background: #f7f8fc;
+  flex-wrap: wrap;
+  scroll-margin-top: 90px;
+}
+
+.about-left {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  justify-content: center;
+}
+
+.about-img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 20px;
+}
+
+.about-right {
+  flex: 2;
+  min-width: 300px;
+}
+
+.about-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.about-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: black;
+  letter-spacing: 0.1rem;
+}
+
+.about-title .highlight {
+  color: #8b6bff;
+}
+
+.about-text {
+  font-size: 20px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.about-text:last-child {
+  margin-bottom: 0;
+}

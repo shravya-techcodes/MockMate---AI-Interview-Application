@@ -1,5 +1,6 @@
 import Navbar from "../Components/Navbar";
 import Hero from "../Components/Hero";
+import About from "../Components/About";
 import Features from "../Components/Features";
 import Working from "../Components/Working";
 import Footer from "../Components/Footer";
@@ -13,6 +14,7 @@ export default function LandingPage() {
     <Navbar />
     <div className="main-content">
     <Hero />
+    <About />
     <Features />
     <Working />
     <Footer />
