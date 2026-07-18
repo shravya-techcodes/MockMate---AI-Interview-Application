@@ -3,6 +3,8 @@
   padding: 50px 60px 30px;
   color: #fff;
   font-family: 'Segoe UI', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .footer-top {

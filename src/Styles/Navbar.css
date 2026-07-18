@@ -6,6 +6,17 @@
   background: #fff;
   border-bottom: 3px solid #eee;
   font-family: 'Segoe UI', sans-serif;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+/* this is landing pge used fr wrapping*/
+.main-content{
+  padding-top: 90px;
 }
 
 .nav-logo {

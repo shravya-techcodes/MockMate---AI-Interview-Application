@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function Features() {
   return (
-    <section className="features">
+    <section className="features" id="features">
         <h1 className="section-label">FEATURES</h1>
 
         <div className="features-grid">
