@@ -43,6 +43,7 @@ if (response.ok) {
 };
 
   return (
+    <div className="LogSignContainer">
     <div className="container">
       {/*LEFT PANEL*/}
       <div className="left-panel">
@@ -87,6 +88,7 @@ if (response.ok) {
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
+    </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import "../Styles/LoginAndSignUp.css";
 import loginImage from "../assets/loginImage.jpeg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -41,7 +42,9 @@ export default function Login() {
     }
   };
 
+  const navigate = useNavigate();
   return (
+    <div className="LogSignContainer">
     <div className="container">
       {/*LEFT PANEL*/}
       <div className="left-panel">
@@ -82,7 +85,7 @@ export default function Login() {
 
           <div className="forgot">Forgot Password?</div>
 
-          <button type="submit" className="btn-login">
+          <button type="submit" className="btn-login" onClick={()=>navigate("/dashboard")}>
             LOGIN
           </button>
         </form>
@@ -91,6 +94,7 @@ export default function Login() {
           Don't have an Account? <Link to="/signup">Sign Up</Link>
         </p>
       </div>
+    </div>
     </div>
   );
 }
