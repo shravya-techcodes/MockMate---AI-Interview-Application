@@ -9,6 +9,10 @@ export default function DashboardNav() {
         <img src={logo} alt="Mock Mate Logo" className="dashlogo-img" />
       </div>
 
+      <div className="dashHome">
+        <a href="#"><i className="fa-solid fa-house icon"></i>Overview</a>
+      </div>
+
       <div className="user-dropdown">
         <div className="user-toggle">
           <span>Hello, Shravya</span>

@@ -1,0 +1,41 @@
+.dash-herosection {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-image: url("../assets/dashhero.jpeg"); /* put your image here */
+  background-size: cover;
+  background-position: center 38%;
+  min-height: 280px;
+  padding: 20px 80px;
+  overflow: hidden;
+  gap: 30px;
+}
+
+.dashhero-left h1 {
+  font-size: 34px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.dashhero-left .highlight {
+  color: #5b3df5;
+}
+
+.resume-btn {
+  background: #5b3df5;
+  color: #fff;
+  border: none;
+  padding: 16px 28px;
+  border-radius: 14px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(91, 61, 245, 0.35);
+}
+
+.resume-btn:hover {
+  background: #4c2fe0;
+}

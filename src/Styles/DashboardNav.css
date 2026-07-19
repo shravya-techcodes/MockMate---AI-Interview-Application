@@ -10,12 +10,28 @@
 .dashnav-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
 .dashlogo-img {
-  width: 17%;
+  width: 23%;
   height: 10%;
+}
+
+.dashHome{
+  display: flex;
+  width: 30%;
+}
+
+.dashHome a {
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.dashHome a:hover {
+  color: #6c4bf4;
+  font-weight: bold;
 }
 /* ===== USER DROPDOWN ===== */
 .user-dropdown {
@@ -25,6 +41,7 @@
 
 .user-toggle {
   display: flex;
+  flex: 1;
   align-items: center;
   gap: 8px;
   font-weight: 600;

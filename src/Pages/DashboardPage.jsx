@@ -1,12 +1,12 @@
 import DashboardNav from "../Components/DashboardNav";
-import SideBar from "../Components/SideBar";
+import DashHero from "../Components/DashHero";
 import React from 'react'
 
 export default function DashboardPage() {
   return (
     <>
     <DashboardNav />
-    <SideBar />
+    <DashHero />
     </>
   )
 }
