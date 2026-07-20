@@ -7,8 +7,10 @@ export default function DashboardPage() {
   return (
     <>
     <DashboardNav />
+    <div className="main-content">
     <DashHero />
     <Practice />
+    </div>
     </>
   )
 }

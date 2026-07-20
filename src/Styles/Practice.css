@@ -81,3 +81,146 @@
 .circle-green  { background: #c8f0d8; color: #1fa055; }
 .circle-pink   { background: #fbd0da; color: #e8305c; }
 .circle-yellow { background: #fbe7a8; color: #d1972a; }
+
+/*-------------------prgress section--------------------------*/
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  margin: 30px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 26px 24px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.stat-purple {
+  background: #ece9fd;
+}
+
+.stat-blue {
+  background: #e3edfd;
+}
+
+.stat-icon-circle {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+}
+
+.circle-purple-solid {
+  background: #5b3df5;
+}
+
+.circle-blue-solid {
+  background: #1f6feb;
+}
+
+.stat-text {
+  flex: 1;
+}
+
+.stat-text h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 6px;
+}
+
+.stat-text p {
+  font-size: 14px;
+  color: #6b6b7b;
+  margin: 0;
+  line-height: 1.4;
+}
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  margin-top: 25px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border: none;
+  border-radius: 18px;
+  padding: 26px 24px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.stat-purple {
+  background: #ece9fd;
+}
+
+.stat-blue {
+  background: #e3edfd;
+}
+
+.stat-icon-circle {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+}
+
+.circle-purple-solid {
+  background: #5b3df5;
+}
+
+.circle-blue-solid {
+  background: #1f6feb;
+}
+
+.stat-text {
+  flex: 1;
+}
+
+.stat-text h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 6px;
+}
+
+.stat-text p {
+  font-size: 14px;
+  color: #6b6b7b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.stat-arrow-circle {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 14px;
+}
