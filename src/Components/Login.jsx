@@ -29,9 +29,9 @@ export default function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         alert("Login Successful!");
+        navigate("/dashboard");
 
         console.log(data);
-
         // We'll save JWT here in Part 10
       } else {
         alert(data.message);
@@ -85,7 +85,7 @@ export default function Login() {
 
           <div className="forgot">Forgot Password?</div>
 
-          <button type="submit" className="btn-login" onClick={()=>navigate("/dashboard")}>
+          <button type="submit" className="btn-login">
             LOGIN
           </button>
         </form>

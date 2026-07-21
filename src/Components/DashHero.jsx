@@ -1,6 +1,7 @@
 import "../Styles/DashHero.css";
+import { useNavigate } from "react-router-dom";
 import React from "react";
-const user = JSON.parse(localStorage.getItem("user"));
+
 const hour = new Date().getHours();
 
 let greeting = "";
@@ -14,6 +15,8 @@ if (hour < 12){
 }
 
 export default function DashHero() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   return (
     <section className="dash-herosection">
       <div className="dashhero-left">
@@ -21,7 +24,7 @@ export default function DashHero() {
         <h1 className="highlight">{user.full_name} !</h1>
       </div>
 
-      <button className="resume-btn">
+      <button className="resume-btn" onClick={()=>navigate("/resume")}>
         Resume Analyser →
       </button>
     </section>

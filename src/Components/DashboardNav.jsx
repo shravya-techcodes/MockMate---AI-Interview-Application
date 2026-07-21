@@ -1,9 +1,17 @@
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/DashboardNav.css";
 import logo from "../assets/logo.jpeg";
 import React from "react";
-const user = JSON.parse(localStorage.getItem("user"));
 
 export default function DashboardNav() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+  const handleLogout = ()=> {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    navigate("/");
+  }
   return (
     <nav className="dashnavbar">
       <div className="dashnav-logo">
@@ -11,7 +19,7 @@ export default function DashboardNav() {
       </div>
 
       <div className="dashHome">
-        <a href="#"><i className="fa-solid fa-house icon"></i>Overview</a>
+        <Link to="/dashboard"><i className="fa-solid fa-house icon"></i>Overview</Link>
       </div>
 
       <div className="user-dropdown">
@@ -26,7 +34,7 @@ export default function DashboardNav() {
             </a>
           </li>
           <li className="logout">
-            <a href="#" className="logout">
+            <a href="#" className="logout" onClick={handleLogout}>
               <i className="fa-solid fa-right-from-bracket"></i> Logout
             </a>
           </li>
