@@ -1,6 +1,7 @@
 import "../Styles/DashboardNav.css";
 import logo from "../assets/logo.jpeg";
 import React from "react";
+const user = JSON.parse(localStorage.getItem("user"));
 
 export default function DashboardNav() {
   return (
@@ -15,7 +16,7 @@ export default function DashboardNav() {
 
       <div className="user-dropdown">
         <div className="user-toggle">
-          <span>Hello, Shravya</span>
+          <span>Hello, {user.full_name}</span>
           <i className="fa-solid fa-chevron-down"></i>
         </div>
         <ul className="dropdown-menu">
