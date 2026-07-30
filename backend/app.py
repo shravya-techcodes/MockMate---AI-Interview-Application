@@ -4,11 +4,23 @@ from db import get_connection
 from flask_cors import CORS
 import bcrypt
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 CORS(app)
+
+UPLOAD_FOLDER = "uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
+ALLOWED_EXTENSIONS = {"pdf", "docx"}
+
+def allowed_file(filename):
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    )
 
 @app.route("/signup", methods=['POST'])
 def signup():
@@ -66,7 +78,7 @@ def login():
         password.encode("utf-8"),
         user["password"].encode("utf-8")
     ):
-        access_token = create_access_token(identity=user["user_id"])
+        access_token = create_access_token(identity=str(user["user_id"]))
 
         return jsonify({
             "message": "Login Successful",
@@ -79,6 +91,44 @@ def login():
         }), 200
 
     return jsonify({"message": "Invalid Email or Password"}), 401
+
+@app.route("/resume/upload", methods=["POST"])
+@jwt_required()
+def upload_resume():
+
+    if "resume" not in request.files:
+        return jsonify({
+            "message": "No resume file provided"
+        }), 400
+
+    file = request.files["resume"]
+
+    if file.filename == "":
+        return jsonify({
+            "message": "No file selected"
+        }), 400
+
+    if not allowed_file(file.filename):
+        return jsonify({
+            "message": "Only PDF and DOCX files are allowed"
+        }), 400
+
+    filename = secure_filename(file.filename)
+
+    upload_path = os.path.join(
+        app.config["UPLOAD_FOLDER"],
+        filename
+    )
+
+    file.save(upload_path)
+
+    user_id = get_jwt_identity()
+
+    return jsonify({
+        "message": "Resume uploaded successfully",
+        "filename": filename,
+        "user_id": user_id
+    }), 200
 
 
 if __name__ == "__main__":

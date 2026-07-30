@@ -77,7 +77,7 @@ export default function ResumeAnalyzer() {
         </div>
       </div>
 
-      {/*Uploaded file view section */}
+      {/*Analysis result view section */}
       <section className="analysis-section">
         <h1 className="analysis-title">Analysis Results</h1>
 
