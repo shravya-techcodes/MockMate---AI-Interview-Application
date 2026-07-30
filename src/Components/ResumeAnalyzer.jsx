@@ -1,8 +1,84 @@
 import "../Styles/ResumeAnalyzer.css";
 import resume from "../assets/resume.jpeg";
-import React from "react";
+import React, { useState } from "react";
 
 export default function ResumeAnalyzer() {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const handleChooseFile = () => {
+    document.getElementById("resumeInput").click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setUploadMessage("Please select a PDF or DOCX file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadMessage("File size must be less than 5MB.");
+      return;
+    }
+
+    setSelectedFile(file);
+    setUploadMessage("");
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      setUploadMessage("Please select a resume first.");
+      return;
+    }
+
+    setUploading(true);
+    setUploadMessage("");
+
+    const formData = new FormData();
+    formData.append("resume", selectedFile);
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/resume/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUploadedFile({
+          name: selectedFile.name,
+          size: selectedFile.size,
+        });
+
+        setUploadMessage(data.message);
+      } else {
+        setUploadMessage(data.message || "Upload failed.");
+      }
+    } catch (error) {
+      console.error(error);
+      setUploadMessage("Unable to connect to the server.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <>
       <section className="resume-section">
@@ -22,7 +98,14 @@ export default function ResumeAnalyzer() {
           <div className="upload-info">
             <h3>Upload Your Resume</h3>
             <p>Upload your resume in PDF or DOCX format.</p>
-            <button className="btn-upload">
+            <input
+              id="resumeInput"
+              type="file"
+              accept=".pdf,.docx"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+            <button className="btn-upload" onClick={handleChooseFile}>
               <i className="fa-solid fa-arrow-up-from-bracket"></i> Upload
               Resume
             </button>
@@ -51,14 +134,19 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-file-pdf"></i>
             </div>
             <div className="file-details">
-              <h4>Shravya_Shettigar_Resume.pdf</h4>
+              <h4>{uploadedFile?.name || "No resume uploaded"} </h4>
               <p>
-                123 KB &nbsp;•&nbsp;{" "}
-                <span className="uploaded-text">Uploaded Successfully</span>
+                {uploadedFile
+                  ? `${(uploadedFile.size / 1024).toFixed(0)} KB`
+                  : "No file selected"}{" "}
+                &nbsp;•&nbsp;
+                {uploadedFile && (
+                  <span className="uploaded-text">Uploaded Successfully</span>
+                )}
               </p>
             </div>
             <div className="status-check">
-              <i className="fa-solid fa-circle-check"></i>
+              {uploadedFile && <i className="fa-solid fa-circle-check"></i>}
             </div>
           </div>
 
@@ -85,14 +173,16 @@ export default function ResumeAnalyzer() {
           {/*Resume Score */}
           <div className="card score-card">
             <h4 className="card-label">Resume Score</h4>
-            <div className="score-circle" style={{"--percent": 82}}>
+            <div className="score-circle" style={{ "--percent": 82 }}>
               <div className="score-inner">
                 <span className="score-number">82</span>
                 <span className="score-total">/100</span>
               </div>
             </div>
             <h3 className="score-status">Good</h3>
-            <p className="score-desc">Your resume is good, but can be improved.</p>
+            <p className="score-desc">
+              Your resume is good, but can be improved.
+            </p>
           </div>
 
           {/* Strengths */}
@@ -161,7 +251,8 @@ export default function ResumeAnalyzer() {
           {/* Recommended Interview Topics */}
           <div className="card">
             <h4 className="card-title purple">
-              <i className="fa-solid fa-camera"></i> Recommended Interview Topics
+              <i className="fa-solid fa-camera"></i> Recommended Interview
+              Topics
             </h4>
             <div className="tag-group">
               <span className="tag">Data Structures</span>
