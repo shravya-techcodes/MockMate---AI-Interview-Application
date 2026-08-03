@@ -7,9 +7,14 @@ import os
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfReader
 from docx import Document
+from google import genai
+import json
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+
+client = genai.Client(api_key = os.getenv("GEMINI_API_KEY"))
+
 jwt = JWTManager(app)
 CORS(app)
 
@@ -124,7 +129,7 @@ def upload_resume():
 
     file.save(upload_path)
 
-    # Extracting the resume text
+    # Extract resume text
     try:
         extracted_text = extract_text_from_resume(upload_path)
 
@@ -138,13 +143,94 @@ def upload_resume():
             "error": str(e)
         }), 500
 
+    # Send resume text to Gemini
+    try:
+
+        prompt = f"""
+You are an AI resume analyzer.
+
+Analyze the following resume carefully.
+
+Return the analysis as JSON with exactly these fields:
+
+{{
+    "summary": "A short professional summary of the candidate",
+    "skills": [],
+    "strengths": [],
+    "weaknesses": [],
+    "experience": [],
+    "education": [],
+    "projects": [],
+    "suggestions": [],
+    "ats_score": 0
+}}
+
+Rules:
+- skills should contain important technical and soft skills.
+- strengths should contain positive aspects of the resume.
+- weaknesses should contain areas that could be improved.
+- experience should contain work or internship experience.
+- education should contain education details.
+- projects should contain important projects.
+- suggestions should contain practical recommendations.
+- ats_score should be a number from 0 to 100.
+- Return ONLY valid JSON.
+- Do not use Markdown.
+- Do not add explanations outside the JSON.
+- Do not invent information.
+
+Resume:
+
+{extracted_text}
+"""
+
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json"
+            }
+        )
+
+        gemini_response = response.text
+
+        print("\n========== GEMINI RESPONSE ==========")
+        print(gemini_response)
+        print("=====================================\n")
+
+        # Convert Gemini JSON string into Python dictionary
+        analysis = json.loads(gemini_response)
+
+    except json.JSONDecodeError as e:
+
+        print("\n========== JSON ERROR ==========")
+        print(str(e))
+        print("================================\n")
+
+        return jsonify({
+            "message": "Gemini returned invalid JSON",
+            "error": str(e)
+        }), 500
+
+    except Exception as e:
+
+        print("\n========== GEMINI ERROR ==========")
+        print(type(e).__name__)
+        print(str(e))
+        print("==================================\n")
+
+        return jsonify({
+            "message": "Failed to analyze resume with Gemini",
+            "error": str(e)
+        }), 500
+
     user_id = get_jwt_identity()
 
     return jsonify({
-        "message": "Resume uploaded successfully",
+        "message": "Resume analyzed successfully",
         "filename": filename,
         "user_id": user_id,
-        "text": extracted_text
+        "analysis": analysis
     }), 200
 
 # Extracting the text from the uploaded file to send it to the API
