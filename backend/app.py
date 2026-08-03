@@ -5,6 +5,8 @@ from flask_cors import CORS
 import bcrypt
 import os
 from werkzeug.utils import secure_filename
+from PyPDF2 import PdfReader
+from docx import Document
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
@@ -122,14 +124,56 @@ def upload_resume():
 
     file.save(upload_path)
 
+    # Extracting the resume text
+    try:
+        extracted_text = extract_text_from_resume(upload_path)
+
+        print("\n========== EXTRACTED RESUME TEXT ==========")
+        print(extracted_text)
+        print("============================================\n")
+
+    except Exception as e:
+        return jsonify({
+            "message": "Failed to extract resume text",
+            "error": str(e)
+        }), 500
+
     user_id = get_jwt_identity()
 
     return jsonify({
         "message": "Resume uploaded successfully",
         "filename": filename,
-        "user_id": user_id
+        "user_id": user_id,
+        "text": extracted_text
     }), 200
 
+# Extracting the text from the uploaded file to send it to the API
+def extract_text_from_resume(file_path):
+    extension = os.path.splitext(file_path)[1].lower()
+
+    # PDF
+    if extension == ".pdf":
+        reader = PdfReader(file_path)
+        text = ""
+        for page in reader.pages:
+            page_text = page.extract_text()
+
+            if page_text:
+                text += page_text + "\n"
+
+        return text.strip()
+
+    # DOCX
+    elif extension == ".docx":
+        document = Document(file_path)
+        text = ""
+        for paragraph in document.paragraphs:
+            text += paragraph.text + "\n"
+
+        return text.strip()
+
+    else:
+        raise ValueError("Unsupported file type")
 
 if __name__ == "__main__":
     app.run(debug=True)

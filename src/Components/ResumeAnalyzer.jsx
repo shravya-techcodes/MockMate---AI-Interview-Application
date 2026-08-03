@@ -134,10 +134,10 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-file-pdf"></i>
             </div>
             <div className="file-details">
-              <h4>{uploadedFile?.name || "No resume uploaded"} </h4>
+              <h4>{selectedFile? selectedFile.name : "No resume selected"} </h4>
               <p>
-                {uploadedFile
-                  ? `${(uploadedFile.size / 1024).toFixed(0)} KB`
+                {selectedFile
+                  ? `${(selectedFile.size / 1024).toFixed(0)} KB`
                   : "No file selected"}{" "}
                 &nbsp;•&nbsp;
                 {uploadedFile && (
@@ -150,8 +150,8 @@ export default function ResumeAnalyzer() {
             </div>
           </div>
 
-          <button className="btn-analyse">
-            <i className="fa-solid fa-wand-magic-sparkles"></i> Analyze Resume
+          <button className="btn-analyse" onClick={handleUpload} disabled={uploading}>
+            <i className="fa-solid fa-wand-magic-sparkles"></i>{uploading ? "Uploading..." : "Analyse Resume"}
           </button>
 
           <button className="btn-outline-purple">
