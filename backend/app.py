@@ -162,6 +162,7 @@ Return the analysis as JSON with exactly these fields:
     "education": [],
     "projects": [],
     "suggestions": [],
+    "interview_topics": ["Give topics to prepare based on the resume skills, projects, experience and education"],
     "ats_score": 0
 }}
 

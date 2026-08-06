@@ -7,6 +7,7 @@ export default function ResumeAnalyzer() {
   const [uploading, setUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [analysis, setAnalysis] = useState(null);
 
   const handleChooseFile = () => {
     document.getElementById("resumeInput").click();
@@ -66,8 +67,9 @@ export default function ResumeAnalyzer() {
           name: selectedFile.name,
           size: selectedFile.size,
         });
-
+        setAnalysis(data.analysis);
         setUploadMessage(data.message);
+
       } else {
         setUploadMessage(data.message || "Upload failed.");
       }
@@ -173,15 +175,15 @@ export default function ResumeAnalyzer() {
           {/*Resume Score */}
           <div className="card score-card">
             <h4 className="card-label">Resume Score</h4>
-            <div className="score-circle" style={{ "--percent": 82 }}>
+            <div className="score-circle" style={{ "--percent": analysis?.ats_score || 0 }}>
               <div className="score-inner">
-                <span className="score-number">82</span>
+              <span className="score-number">{analysis?.ats_score || 0 }</span>
                 <span className="score-total">/100</span>
               </div>
             </div>
             <h3 className="score-status">Good</h3>
             <p className="score-desc">
-              Your resume is good, but can be improved.
+              { analysis?.summary || "Upload and analyse your resume to see your score"}
             </p>
           </div>
 
@@ -191,10 +193,9 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-shield-halved"></i> Strengths
             </h4>
             <ul className="list">
-              <li>Clear contact information</li>
-              <li>Good use of headings</li>
-              <li>Relevant skills included</li>
-              <li>Professional summary present</li>
+              { analysis?.strengths?.map((strength, index) => (
+                <li key={index}>{strength}</li>
+              ))}
             </ul>
           </div>
 
@@ -204,10 +205,9 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-triangle-exclamation"></i> Weaknesses
             </h4>
             <ul className="list">
-              <li>Summary is a bit too long</li>
-              <li>Some skills need more context</li>
-              <li>Lack of measurable achievements</li>
-              <li>Inconsistent formatting</li>
+              {analysis?.weaknesses?.map((weakness, index) => (
+                <li key={index}>{weakness}</li>
+              ))}
             </ul>
           </div>
 
@@ -217,10 +217,9 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-lightbulb"></i> Suggestions
             </h4>
             <ul className="list">
-              <li>Keep summary concise (3-4 lines)</li>
-              <li>Add more quantifiable results</li>
-              <li>Include relevant certifications</li>
-              <li>Improve bullet points</li>
+              { analysis?.suggestions?.map((suggestion, index) => (
+                <li key={index}>{suggestion}</li>
+              ))}
             </ul>
           </div>
         </div>
@@ -232,19 +231,9 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-layer-group"></i> Skills Detected
             </h4>
             <div className="tag-group">
-              <span className="tag">Python</span>
-              <span className="tag">JavaScript</span>
-              <span className="tag">React</span>
-              <span className="tag">SQL</span>
-              <span className="tag">HTML</span>
-              <span className="tag">CSS</span>
-              <span className="tag">Flask</span>
-              <span className="tag">MySQL</span>
-              <span className="tag">Git</span>
-              <span className="tag">Problem Solving</span>
-              <span className="tag">Data Structures</span>
-              <span className="tag">Algorithms</span>
-              <span className="tag">DBMS</span>
+              {analysis?.skills?.map((skill, index) => (
+                <span className="tag" key={index}>{skill}</span>
+              ))}
             </div>
           </div>
 
@@ -255,20 +244,15 @@ export default function ResumeAnalyzer() {
               Topics
             </h4>
             <div className="tag-group">
-              <span className="tag">Data Structures</span>
-              <span className="tag">Algorithms</span>
-              <span className="tag">DBMS</span>
-              <span className="tag">System Design</span>
-              <span className="tag">Python Basics</span>
-              <span className="tag">Flask</span>
-              <span className="tag">SQL Queries</span>
-              <span className="tag">React Concepts</span>
+              {analysis?.interview_topics?.map((topic, index) => (
+                <span className="tag" key={index}>{topic}</span>
+              ))}
             </div>
           </div>
         </div>
 
         <div className="bottom-actions">
-          <button className="btn-outline">
+          <button className="btn-outline" onClick={handleChooseFile}>
             <i className="fa-solid fa-rotate"></i> Analyze Another Resume
           </button>
         </div>
