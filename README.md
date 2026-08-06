@@ -4,9 +4,11 @@ MockMate AI is a full-stack AI-powered interview preparation platform designed t
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React.js, Vite, HTML, CSS, JS
-- **Backend:** Python, Flask
+- **Frontend:** React.js, HTML, CSS, JavaScript
+- **Backend:** Python, Flask, REST API
 - **Database:** MySQL
-- **API:** REST APIs
+- **AI:** Google Gemini API (Gemeini 3.5 Flash)
+- **Authentication:** JWT
+- **Libraries:** PyPDF2, python-docx, bcrypt, Werkzeug
 
-## 🚧 **Project Status:** *Currently under development......*
+## 🚧 **Project Status:** *Currently under development...*
