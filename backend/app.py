@@ -9,6 +9,7 @@ from PyPDF2 import PdfReader
 from docx import Document
 from google import genai
 import json
+import uuid
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
@@ -120,11 +121,15 @@ def upload_resume():
             "message": "Only PDF and DOCX files are allowed"
         }), 400
 
-    filename = secure_filename(file.filename)
+    original_filename = secure_filename(file.filename)
+
+    name, extension = os.path.splitext(original_filename)
+
+    unique_filename = f"{name}_{uuid.uuid4().hex}{extension}"
 
     upload_path = os.path.join(
         app.config["UPLOAD_FOLDER"],
-        filename
+        unique_filename
     )
 
     file.save(upload_path)
@@ -229,7 +234,7 @@ Resume:
 
     return jsonify({
         "message": "Resume analyzed successfully",
-        "filename": filename,
+        "filename": original_filename,
         "user_id": user_id,
         "analysis": analysis
     }), 200
