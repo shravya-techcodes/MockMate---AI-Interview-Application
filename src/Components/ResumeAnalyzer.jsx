@@ -71,7 +71,6 @@ export default function ResumeAnalyzer() {
         });
         setAnalysis(data.analysis);
         setUploadMessage(data.message);
-
       } else {
         setUploadMessage(data.message || "Upload failed.");
       }
@@ -138,7 +137,9 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-file-pdf"></i>
             </div>
             <div className="file-details">
-              <h4>{selectedFile? selectedFile.name : "No resume selected"} </h4>
+              <h4>
+                {selectedFile ? selectedFile.name : "No resume selected"}{" "}
+              </h4>
               <p>
                 {selectedFile
                   ? `${(selectedFile.size / 1024).toFixed(0)} KB`
@@ -154,11 +155,24 @@ export default function ResumeAnalyzer() {
             </div>
           </div>
 
-          <button className="btn-analyse" onClick={handleUpload} disabled={uploading}>
-            <i className="fa-solid fa-wand-magic-sparkles"></i>{uploading ? "Uploading..." : "Analyse Resume"}
+          <button
+            className="btn-analyse"
+            onClick={handleUpload}
+            disabled={uploading}
+          >
+            <i className="fa-solid fa-wand-magic-sparkles"></i>
+            {uploading ? "Uploading..." : "Analyse Resume"}
           </button>
 
-          <button className="btn-outline-purple" onClick={()=>navigate("/resumeInterview")}>
+          <button
+            className="btn-outline-purple"
+            onClick={() => navigate("/resumeInterview", {
+                state: {
+                  analysis: analysis,
+                },
+              })
+            }
+          >
             <i className="fa-solid fa-microphone"></i>
             <span>
               Start Interview
@@ -177,15 +191,19 @@ export default function ResumeAnalyzer() {
           {/*Resume Score */}
           <div className="card score-card">
             <h4 className="card-label">Resume Score</h4>
-            <div className="score-circle" style={{ "--percent": analysis?.ats_score || 0 }}>
+            <div
+              className="score-circle"
+              style={{ "--percent": analysis?.ats_score || 0 }}
+            >
               <div className="score-inner">
-              <span className="score-number">{analysis?.ats_score || 0 }</span>
+                <span className="score-number">{analysis?.ats_score || 0}</span>
                 <span className="score-total">/100</span>
               </div>
             </div>
             <h3 className="score-status">Good</h3>
             <p className="score-desc">
-              { analysis?.summary || "Upload and analyse your resume to see your score"}
+              {analysis?.summary ||
+                "Upload and analyse your resume to see your score"}
             </p>
           </div>
 
@@ -195,7 +213,7 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-shield-halved"></i> Strengths
             </h4>
             <ul className="list">
-              { analysis?.strengths?.map((strength, index) => (
+              {analysis?.strengths?.map((strength, index) => (
                 <li key={index}>{strength}</li>
               ))}
             </ul>
@@ -219,7 +237,7 @@ export default function ResumeAnalyzer() {
               <i className="fa-solid fa-lightbulb"></i> Suggestions
             </h4>
             <ul className="list">
-              { analysis?.suggestions?.map((suggestion, index) => (
+              {analysis?.suggestions?.map((suggestion, index) => (
                 <li key={index}>{suggestion}</li>
               ))}
             </ul>
@@ -234,7 +252,9 @@ export default function ResumeAnalyzer() {
             </h4>
             <div className="tag-group">
               {analysis?.skills?.map((skill, index) => (
-                <span className="tag" key={index}>{skill}</span>
+                <span className="tag" key={index}>
+                  {skill}
+                </span>
               ))}
             </div>
           </div>
@@ -247,7 +267,9 @@ export default function ResumeAnalyzer() {
             </h4>
             <div className="tag-group">
               {analysis?.interview_topics?.map((topic, index) => (
-                <span className="tag" key={index}>{topic}</span>
+                <span className="tag" key={index}>
+                  {topic}
+                </span>
               ))}
             </div>
           </div>

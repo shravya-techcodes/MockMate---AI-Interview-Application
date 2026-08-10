@@ -267,5 +267,54 @@ def extract_text_from_resume(file_path):
     else:
         raise ValueError("Unsupported file type")
 
+@app.route("/interview/questions", methods=["POST"])
+def interview_questions():
+    data = request.get_json()
+    analysis = data.get("analysis")
+    if not analysis:
+        return jsonify({
+            "message": "Resume analysis is required"
+        }), 400
+    prompt = f"""
+You are an AI interviewer conducting a job interview based on a candidate's resume.
+Here is the candidate's resume analysis:
+{json.dumps(analysis, indent=2)}
+Generate exactly 7 interview questions based on this candidate's resume.
+Requirements:
+1. Generate exactly 7 questions.
+2. Ask all 7 questions in one response.
+3. Questions must be relevant to the candidate's resume.
+4. Include questions about skills, projects, and experience when relevant.
+5. Start with easier questions and gradually increase difficulty.
+6. Include technical and project-based questions.
+7. Do not ask questions unrelated to the resume.
+8. Return ONLY valid JSON.
+9. Do not use Markdown.
+10. Use this exact JSON format:
+
+{{
+    "questions": [
+        "Question 1",
+        "Question 2",
+        "Question 3",
+        "Question 4",
+        "Question 5",
+        "Question 6",
+        "Question 7"
+    ]
+}}
+"""
+    response = client.models.generate_content(
+        model="gemini-3.5-flash",
+        contents=prompt
+    )
+    print("Gemini response:")
+    print(response.text)
+    questions_data = json.loads(response.text)
+    return jsonify({
+        "message": "Questions generated successfully",
+        "questions": questions_data["questions"]
+    }), 200
+
 if __name__ == "__main__":
     app.run(debug=True)

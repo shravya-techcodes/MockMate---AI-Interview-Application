@@ -1,6 +1,6 @@
 import "../Styles/ResumeInterview.css";
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function ResumeInterview() {
   const [userInput, setUserInput] = useState("");
@@ -8,6 +8,8 @@ export default function ResumeInterview() {
   const [typing, setTyping] = useState(false);
   const chatBoxRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const analysis = location.state?.analysis;
 
   // Current time
   function timeNow() {
@@ -18,7 +20,7 @@ export default function ResumeInterview() {
   }
 
   // Send message
-  function sendMessage() {
+  async function sendMessage() {
     const text = userInput.trim();
     if (!text) return;
 
@@ -38,19 +40,46 @@ export default function ResumeInterview() {
     // Show typing indicator
     setTyping(true);
 
-    // Temporary bot response
-    setTimeout(() => {
-      setTyping(false);
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:5000/interview/questions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            analysis: analysis,
+          }),
+        },
+      );
 
+      const data = await response.json();
+      setTyping(false);
+      console.log("Interview questions response:", data);
+
+      // Temporary response
+      const questionsText = data.questions.map((question, index) => `${index + 1}. ${question}`).join("\n\n");
       setMessages((prev) => [
         ...prev,
         {
           type: "bot",
-          text: "Thanks! I'm analyzing your answers. Please wait a moment...",
+          text: questionsText,
           time: timeNow(),
         },
       ]);
-    }, 1200);
+    } catch (error) {
+      setTyping(false);
+      console.error("Error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: "bot",
+          text: "Sorry, I couldn't generate the interview questions.",
+          time: timeNow(),
+        },
+      ]);
+    }
   }
 
   // Scroll chat to bottom
@@ -141,7 +170,7 @@ export default function ResumeInterview() {
                   <small>{message.time}</small>
                 </div>
 
-                <p>{message.text}</p>
+                <p style={{ whiteSpace: "pre-line" }}>{message.text}</p>
 
                 {/* User check mark */}
                 {message.type === "user" && (
