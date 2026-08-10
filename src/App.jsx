@@ -5,6 +5,7 @@ import LoginPage from "./Pages/LoginPage";
 import SignupPage from "./Pages/SignupPage";
 import DashboardPage from "./Pages/DashboardPage";
 import ResumePage from "./Pages/ResumePage";
+import ResInterviewPage from "./Pages/ResInterviewPage";
 
 import React from 'react'
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/resume" element={<ResumePage />} />
+      <Route path="/resumeInterview" element={<ResInterviewPage />} />
     </Routes>
   )
 }

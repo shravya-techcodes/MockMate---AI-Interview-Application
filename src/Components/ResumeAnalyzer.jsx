@@ -1,8 +1,10 @@
 import "../Styles/ResumeAnalyzer.css";
 import resume from "../assets/resume.jpeg";
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
 export default function ResumeAnalyzer() {
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
@@ -156,7 +158,7 @@ export default function ResumeAnalyzer() {
             <i className="fa-solid fa-wand-magic-sparkles"></i>{uploading ? "Uploading..." : "Analyse Resume"}
           </button>
 
-          <button className="btn-outline-purple">
+          <button className="btn-outline-purple" onClick={()=>navigate("/resumeInterview")}>
             <i className="fa-solid fa-microphone"></i>
             <span>
               Start Interview
