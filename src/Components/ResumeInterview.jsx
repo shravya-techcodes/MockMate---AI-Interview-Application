@@ -9,6 +9,7 @@ export default function ResumeInterview() {
   const chatBoxRef = useRef(null);
   const [completeAnswer, setCompleteAnswer] = useState("");
   const [questions, setQuestions] = useState([]);
+  const [evaluation, setEvaluation] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const analysis = location.state?.analysis;
@@ -22,75 +23,74 @@ export default function ResumeInterview() {
   }
 
   // Send message
- async function sendMessage() {
-  const text = userInput.trim();
+  async function sendMessage() {
+    const text = userInput.trim();
 
-  if (!text) return;
+    if (!text) return;
 
-  // Add user's message to chat
-  setMessages((prev) => [
-    ...prev,
-    {
-      type: "user",
-      text: text,
-      time: timeNow(),
-    },
-  ]);
+    // Add user's message to chat
+    setMessages((prev) => [
+      ...prev,
+      {
+        type: "user",
+        text: text,
+        time: timeNow(),
+      },
+    ]);
 
-  // Clear input
-  setUserInput("");
+    // Clear input
+    setUserInput("");
 
-  // Show typing indicator
-  setTyping(true);
+    // Show typing indicator
+    setTyping(true);
 
-  try {
-    // STEP 1: Generate 7 questions
-    if (questions.length === 0) {
-      const response = await fetch(
-        "http://127.0.0.1:5000/interview/questions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+    try {
+      // STEP 1: Generate 7 questions
+      if (questions.length === 0) {
+        const response = await fetch(
+          "http://127.0.0.1:5000/interview/questions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              analysis: analysis,
+            }),
           },
-          body: JSON.stringify({
-            analysis: analysis,
-          }),
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to generate questions");
         }
+
+        setQuestions(data.questions);
+
+        const questionsText = data.questions
+          .map((question, index) => `${index + 1}. ${question}`)
+          .join("\n\n");
+
+        setTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "bot",
+            text: questionsText,
+            time: timeNow(),
+          },
+        ]);
+
+        return;
+      }
+      -(
+        // STEP 2: Evaluate user's answers
+
+        setCompleteAnswer(text)
       );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to generate questions");
-      }
-
-      setQuestions(data.questions);
-
-      const questionsText = data.questions
-        .map((question, index) => `${index + 1}. ${question}`)
-        .join("\n\n");
-
-      setTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "bot",
-          text: questionsText,
-          time: timeNow(),
-        },
-      ]);
-
-      return;
-    }
--
-    // STEP 2: Evaluate user's answers
-
-    setCompleteAnswer(text);
-
-    const response = await fetch(
-      "http://127.0.0.1:5000/interview/evaluate",
-      {
+      const response = await fetch("http://127.0.0.1:5000/interview/evaluate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,41 +99,39 @@ export default function ResumeInterview() {
           questions: questions,
           answers: text,
         }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to evaluate answers");
       }
-    );
+      setEvaluation(data);
+      setTyping(false);
 
-    const data = await response.json();
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: "bot",
+          text: data.message,
+          time: timeNow(),
+        },
+      ]);
+    } catch (error) {
+      setTyping(false);
 
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to evaluate answers");
+      console.error("Error:", error);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: "bot",
+          text: "Sorry, something went wrong. Please try again.",
+          time: timeNow(),
+        },
+      ]);
     }
-
-    setTyping(false);
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        type: "bot",
-        text: data.message,
-        time: timeNow(),
-      },
-    ]);
-
-  } catch (error) {
-    setTyping(false);
-
-    console.error("Error:", error);
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        type: "bot",
-        text: "Sorry, something went wrong. Please try again.",
-        time: timeNow(),
-      },
-    ]);
   }
-}
 
   // Scroll chat to bottom
   useEffect(() => {
@@ -248,6 +246,50 @@ export default function ResumeInterview() {
             </div>
           )}
         </div>
+
+        {/* Evaluation Result */}
+        {evaluation && (
+          <div className="evaluation-result">
+            <h2>Interview Result</h2>
+
+            {/* Overall Score */}
+            <div className="overall-score">
+              <h3>Overall Score</h3>
+              <p>{evaluation.overall_score}/10</p>
+            </div>
+
+            {/* Question-wise Scores */}
+            <div className="question-scores">
+              <h3>Question-wise Scores</h3>
+
+              {evaluation.question_scores.map((item, index) => (
+                <div className="question-score" key={index}>
+                  <p>
+                    <strong>Question {index + 1}:</strong> {item.question}
+                  </p>
+
+                  <p>
+                    <strong>Score:</strong> {item.score}/10
+                  </p>
+
+                  <p>
+                    <strong>Feedback:</strong> {item.feedback}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Improvement Suggestions */}
+            <div className="improvement-suggestions">
+              <h3>Improvement Suggestions</h3>
+              <ul>
+                {evaluation.improvement_suggestions.map((suggestion, index) => (
+                  <li key={index}>{suggestion}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         {/* Input */}
         <div className="chat-input">

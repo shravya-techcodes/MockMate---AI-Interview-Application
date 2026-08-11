@@ -285,8 +285,8 @@ Requirements:
 2. Ask all 7 questions in one response.
 3. Questions must be relevant to the candidate's resume.
 4. Include questions about skills, projects, and experience when relevant.
-5. Start with easier questions and gradually increase difficulty.
-6. Include technical and project-based questions.
+5. Ask very basic and easy questions like dieerence between class and object etc..
+6. Include technical and project-based  easy questions.
 7. Do not ask questions unrelated to the resume.
 8. Return ONLY valid JSON.
 9. Do not use Markdown.
@@ -412,16 +412,14 @@ The JSON must contain:
             "feedback": ""
         }}
     ],
-    "improvement_suggestions": [],
-    "overall_feedback": ""
+    "improvement_suggestions": []""
 }}
 
 Rules:
 - overall_score must be between 0 and 10.
 - Each question score must be between 0 and 10.
 - Give a score and feedback for all 7 questions.
-- improvement_suggestions should contain practical suggestions.
-- overall_feedback should summarize the candidate's overall interview performance.
+- improvement_suggestions should contain practical suggestions and feedback upto 10 points.
 """
     print("Gemini evaluation prompt created")
     response = client.models.generate_content(
