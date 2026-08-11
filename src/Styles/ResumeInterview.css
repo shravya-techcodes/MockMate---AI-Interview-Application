@@ -178,7 +178,7 @@
   gap: 10px;
   margin-top: 16px;
 }
-.chat-input input {
+.chat-input textarea {
   flex: 1;
   border: 1px solid #e2e2f0;
   border-radius: 10px;

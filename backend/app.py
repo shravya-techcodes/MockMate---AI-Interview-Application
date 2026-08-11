@@ -316,5 +316,125 @@ Requirements:
         "questions": questions_data["questions"]
     }), 200
 
+@app.route("/interview/evaluate", methods=["POST"])
+def evaluate_interview():
+
+    data = request.get_json()
+
+    questions = data.get("questions")
+    answers = data.get("answers")
+
+    if not questions:
+        return jsonify({
+            "message": "Questions are required"
+        }), 400
+
+    if not answers:
+        return jsonify({
+            "message": "Answers are required"
+        }), 400
+
+    print("Received questions:")
+    print(questions)
+
+    print("Received answers:")
+    print(answers)
+
+    prompt = f"""
+You are an AI interview evaluator.
+
+Evaluate the candidate's answers to the following 7 interview questions.
+
+INTERVIEW QUESTIONS AND ANSWERS:
+
+Question 1:
+{questions[0]}
+
+Answer 1:
+{answers[0]}
+
+Question 2:
+{questions[1]}
+
+Answer 2:
+{answers[1]}
+
+Question 3:
+{questions[2]}
+
+Answer 3:
+{answers[2]}
+
+Question 4:
+{questions[3]}
+
+Answer 4:
+{answers[3]}
+
+Question 5:
+{questions[4]}
+
+Answer 5:
+{answers[4]}
+
+Question 6:
+{questions[5]}
+
+Answer 6:
+{answers[5]}
+
+Question 7:
+{questions[6]}
+
+Answer 7:
+{answers[6]}
+
+
+Evaluate the interview based on:
+- Accuracy
+- Relevance
+- Clarity
+- Communication
+- Technical knowledge where applicable
+- Quality of explanation
+
+Return ONLY valid JSON.
+Do not use Markdown or code blocks.
+
+The JSON must contain:
+
+{{
+    "overall_score": 0,
+    "question_scores": [
+        {{
+            "question_number": 1,
+            "score": 0,
+            "feedback": ""
+        }}
+    ],
+    "improvement_suggestions": [],
+    "overall_feedback": ""
+}}
+
+Rules:
+- overall_score must be between 0 and 10.
+- Each question score must be between 0 and 10.
+- Give a score and feedback for all 7 questions.
+- improvement_suggestions should contain practical suggestions.
+- overall_feedback should summarize the candidate's overall interview performance.
+"""
+    print("Gemini evaluation prompt created")
+    response = client.models.generate_content(
+        model="gemini-3.5-flash",
+        contents=prompt
+    )
+    print("Gemini response:")
+    print(response.text)
+
+    evaluation = json.loads(response.text)
+    print("Parsed evaluation:")
+    print(evaluation)
+    return jsonify(evaluation), 200
+
 if __name__ == "__main__":
     app.run(debug=True)

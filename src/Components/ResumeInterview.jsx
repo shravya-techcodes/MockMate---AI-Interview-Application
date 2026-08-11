@@ -7,6 +7,8 @@ export default function ResumeInterview() {
   const [messages, setMessages] = useState([]);
   const [typing, setTyping] = useState(false);
   const chatBoxRef = useRef(null);
+  const [completeAnswer, setCompleteAnswer] = useState("");
+  const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const analysis = location.state?.analysis;
@@ -20,27 +22,30 @@ export default function ResumeInterview() {
   }
 
   // Send message
-  async function sendMessage() {
-    const text = userInput.trim();
-    if (!text) return;
+ async function sendMessage() {
+  const text = userInput.trim();
 
-    // Add user message
-    setMessages((prev) => [
-      ...prev,
-      {
-        type: "user",
-        text: text,
-        time: timeNow(),
-      },
-    ]);
+  if (!text) return;
 
-    // Clear input
-    setUserInput("");
+  // Add user's message to chat
+  setMessages((prev) => [
+    ...prev,
+    {
+      type: "user",
+      text: text,
+      time: timeNow(),
+    },
+  ]);
 
-    // Show typing indicator
-    setTyping(true);
+  // Clear input
+  setUserInput("");
 
-    try {
+  // Show typing indicator
+  setTyping(true);
+
+  try {
+    // STEP 1: Generate 7 questions
+    if (questions.length === 0) {
       const response = await fetch(
         "http://127.0.0.1:5000/interview/questions",
         {
@@ -51,15 +56,22 @@ export default function ResumeInterview() {
           body: JSON.stringify({
             analysis: analysis,
           }),
-        },
+        }
       );
 
       const data = await response.json();
-      setTyping(false);
-      console.log("Interview questions response:", data);
 
-      // Temporary response
-      const questionsText = data.questions.map((question, index) => `${index + 1}. ${question}`).join("\n\n");
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to generate questions");
+      }
+
+      setQuestions(data.questions);
+
+      const questionsText = data.questions
+        .map((question, index) => `${index + 1}. ${question}`)
+        .join("\n\n");
+
+      setTyping(false);
       setMessages((prev) => [
         ...prev,
         {
@@ -68,19 +80,60 @@ export default function ResumeInterview() {
           time: timeNow(),
         },
       ]);
-    } catch (error) {
-      setTyping(false);
-      console.error("Error:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "bot",
-          text: "Sorry, I couldn't generate the interview questions.",
-          time: timeNow(),
-        },
-      ]);
+
+      return;
     }
+-
+    // STEP 2: Evaluate user's answers
+
+    setCompleteAnswer(text);
+
+    const response = await fetch(
+      "http://127.0.0.1:5000/interview/evaluate",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questions: questions,
+          answers: text,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to evaluate answers");
+    }
+
+    setTyping(false);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        type: "bot",
+        text: data.message,
+        time: timeNow(),
+      },
+    ]);
+
+  } catch (error) {
+    setTyping(false);
+
+    console.error("Error:", error);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        type: "bot",
+        text: "Sorry, something went wrong. Please try again.",
+        time: timeNow(),
+      },
+    ]);
   }
+}
 
   // Scroll chat to bottom
   useEffect(() => {
@@ -198,16 +251,11 @@ export default function ResumeInterview() {
 
         {/* Input */}
         <div className="chat-input">
-          <input
-            type="text"
+          <textarea
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                sendMessage();
-              }
-            }}
-            placeholder="Type your answer here..."
+            placeholder="Type your answers to all questions here..."
+            rows="2"
           />
 
           <button onClick={sendMessage}>
